@@ -1,9 +1,6 @@
 plugins {
-    // Android library plugin
     id 'com.android.library'
-    // Kotlin Android support
     id 'org.jetbrains.kotlin.android'
-    // Flutter’s declarative plugin loader
     id 'flutter.plugin.loader'
 }
 
