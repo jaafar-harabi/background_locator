@@ -78,7 +78,7 @@ class BackgroundLocatorPlugin
                 disposePluggable.setCallback(context, it)
             }
 
-            val settings: Map<Any, Any> = args[Keys.ARG_SETTINGS] as? Map<Any, Any> ?: emptyMap()
+            val settings = args[Keys.ARG_SETTINGS] as Map<*, *>
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                     context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -204,8 +204,7 @@ class BackgroundLocatorPlugin
 
             initializeService(context, args)
 
-            val settings: Map<Any, Any> = args[Keys.ARG_SETTINGS] as? Map<Any, Any> ?: emptyMap()
-
+            val settings = args[Keys.ARG_SETTINGS] as Map<*, *>
             startIsolateService(context, settings)
         }
     }
@@ -265,24 +264,19 @@ class BackgroundLocatorPlugin
     }
 
     override fun onNewIntent(intent: Intent?): Boolean {
-        if (intent.action != Keys.NOTIFICATION_ACTION) {
-            // this is not our notification
+        if (intent?.action != Keys.NOTIFICATION_ACTION) {
             return false
         }
 
         val notificationCallback = PreferencesManager.getCallbackHandle(activity!!, Keys.NOTIFICATION_CALLBACK_HANDLE_KEY)
         if (notificationCallback != null && IsolateHolderService.backgroundEngine != null) {
-           IsolateHolderService.backgroundEngine?.dartExecutor?.binaryMessenger?.let { messenger ->
-                // Safely use 'messenger' here, it's non-null
-                val backgroundChannel = MethodChannel(messenger, Keys.BACKGROUND_CHANNEL_ID)
-            }
-
+            val backgroundChannel = MethodChannel(IsolateHolderService.backgroundEngine?.dartExecutor?.binaryMessenger, Keys.BACKGROUND_CHANNEL_ID)
             activity?.mainLooper?.let {
                 Handler(it)
                         .post {
-                            backgroundChannel.invokeMethod(Keys.BCM_NOTIFICATION_CLICK,
-                                    hashMapOf(Keys.ARG_NOTIFICATION_CALLBACK to notificationCallback))
-                        }
+                    backgroundChannel.invokeMethod(Keys.BCM_NOTIFICATION_CLICK,
+                            hashMapOf(Keys.ARG_NOTIFICATION_CALLBACK to notificationCallback))
+                }
             }
         }
 
