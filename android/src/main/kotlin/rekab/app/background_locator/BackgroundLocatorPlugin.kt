@@ -99,7 +99,7 @@ class BackgroundLocatorPlugin
         }
 
         @JvmStatic
-        private fun startIsolateService(context: Context, settings: Map<*, *>) {
+        private fun startIsolateService(context: Context, settings: Map<Any, Any>){
             val intent = Intent(context, IsolateHolderService::class.java)
             intent.action = IsolateHolderService.ACTION_START
             intent.putExtra(Keys.SETTINGS_ANDROID_NOTIFICATION_CHANNEL_NAME,
@@ -205,7 +205,7 @@ class BackgroundLocatorPlugin
 
             initializeService(context, args)
 
-            val settings = args[Keys.ARG_SETTINGS] as Map<*, *>
+            val settings = args[Keys.ARG_SETTINGS] as? Map<Any, Any> ?: emptyMap()
             startIsolateService(context, settings)
         }
     }
@@ -267,25 +267,24 @@ class BackgroundLocatorPlugin
         channel?.setMethodCallHandler(plugin)
     }
 
-        override fun onNewIntent(p0: Intent): Boolean {
-        if (p0.action != Keys.NOTIFICATION_ACTION) return false
+        override fun onNewIntent(p0: Intent?): Boolean {
+    if (p0?.action != Keys.NOTIFICATION_ACTION) return false
 
-        val callback = PreferencesManager.getCallbackHandle(activity!!, Keys.NOTIFICATION_CALLBACK_HANDLE_KEY)
-        if (callback != null && IsolateHolderService.backgroundEngine != null) {
-            val channel = MethodChannel(
-                IsolateHolderService.backgroundEngine!!.dartExecutor.binaryMessenger,
-                Keys.BACKGROUND_CHANNEL_ID
+    val callback = PreferencesManager.getCallbackHandle(activity!!, Keys.NOTIFICATION_CALLBACK_HANDLE_KEY)
+    if (callback != null && IsolateHolderService.backgroundEngine != null) {
+        val channel = MethodChannel(
+            IsolateHolderService.backgroundEngine!!.dartExecutor.binaryMessenger,
+            Keys.BACKGROUND_CHANNEL_ID
+        )
+        Handler(activity!!.mainLooper).post {
+            channel.invokeMethod(
+                Keys.BCM_NOTIFICATION_CLICK,
+                hashMapOf(Keys.ARG_NOTIFICATION_CALLBACK to callback)
             )
-            Handler(activity!!.mainLooper).post {
-                channel.invokeMethod(
-                    Keys.BCM_NOTIFICATION_CLICK,
-                    hashMapOf(Keys.ARG_NOTIFICATION_CALLBACK to callback)
-                )
-            }
         }
-
-        return true
     }
+    return true
+}
 
     override fun onDetachedFromActivity() {
     }
