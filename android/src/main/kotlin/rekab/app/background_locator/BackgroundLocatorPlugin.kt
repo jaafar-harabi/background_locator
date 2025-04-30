@@ -212,7 +212,7 @@ class BackgroundLocatorPlugin
     override fun onMethodCall(call: MethodCall, result: Result) {
         when (call.method) {
             Keys.METHOD_PLUGIN_INITIALIZE_SERVICE -> {
-                val args: Map<Any, Any> = call.arguments()
+                val args: Map<Any, Any>? = call.arguments()
 
                 // save callback dispatcher to use it when device reboots
                 PreferencesManager.saveCallbackDispatcher(context!!, args)
@@ -263,7 +263,8 @@ class BackgroundLocatorPlugin
         channel?.setMethodCallHandler(plugin)
     }
 
-    override fun onNewIntent(intent: Intent?): Boolean {
+    @Override
+    fun onNewIntent(intent: Intent?): Boolean {
         if (intent?.action != Keys.NOTIFICATION_ACTION) {
             return false
         }
@@ -272,8 +273,7 @@ class BackgroundLocatorPlugin
         if (notificationCallback != null && IsolateHolderService.backgroundEngine != null) {
             val backgroundChannel = MethodChannel(IsolateHolderService.backgroundEngine?.dartExecutor?.binaryMessenger, Keys.BACKGROUND_CHANNEL_ID)
             activity?.mainLooper?.let {
-                Handler(it)
-                        .post {
+                Handler(it).post {
                     backgroundChannel.invokeMethod(Keys.BCM_NOTIFICATION_CLICK,
                             hashMapOf(Keys.ARG_NOTIFICATION_CALLBACK to notificationCallback))
                 }
@@ -282,6 +282,7 @@ class BackgroundLocatorPlugin
 
         return true
     }
+
 
     override fun onDetachedFromActivity() {
     }
