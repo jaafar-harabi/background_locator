@@ -1,37 +1,38 @@
+
 plugins {
-    id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
-    id 'flutter.plugin.loader'
-}
+ id 'com.android.library'
+   id 'org.jetbrains.kotlin.android'
+   id 'dev.flutter.flutter-plugin-loader'
+ }
 
-android {
-    namespace 'rekab.app.background_locator'
-    compileSdk 34
+ android {
+     namespace 'rekab.app.background_locator'
+     compileSdk 34
 
-    defaultConfig {
-        minSdk 24
-        targetSdk 34
-    }
+     defaultConfig {
+         minSdk 24
+         targetSdk 34
+     }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
-    }
+     compileOptions {
+         sourceCompatibility JavaVersion.VERSION_17
+         targetCompatibility JavaVersion.VERSION_17
+     }
 
-    kotlinOptions {
-        jvmTarget = '17'
-    }
+     kotlinOptions {
+         jvmTarget = '17'
+     }
 
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-    }
-    lint {
-        disable 'InvalidPackage'
-    }
-}
+     sourceSets {
+         main.java.srcDirs += 'src/main/kotlin'
+     }
+     lint {
+         disable 'InvalidPackage'
+     }
+ }
 
-dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'com.google.android.gms:play-services-location:18.0.0'
-    implementation 'com.google.code.gson:gson:2.8.6'
-}
+ dependencies {
+     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+     implementation 'com.google.android.gms:play-services-location:18.0.0'
+     implementation 'com.google.code.gson:gson:2.8.6'
+ }
