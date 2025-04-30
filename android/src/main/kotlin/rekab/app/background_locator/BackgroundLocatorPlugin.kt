@@ -78,7 +78,7 @@ class BackgroundLocatorPlugin
                 disposePluggable.setCallback(context, it)
             }
 
-            val settings = args[Keys.ARG_SETTINGS] as Map<*, *>
+            val settings: Map<Any, Any> = args[Keys.ARG_SETTINGS] as? Map<Any, Any> ?: emptyMap()
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                     context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -204,7 +204,8 @@ class BackgroundLocatorPlugin
 
             initializeService(context, args)
 
-            val settings = args[Keys.ARG_SETTINGS] as Map<*, *>
+            val settings: Map<Any, Any> = args[Keys.ARG_SETTINGS] as? Map<Any, Any> ?: emptyMap()
+
             startIsolateService(context, settings)
         }
     }
@@ -263,7 +264,7 @@ class BackgroundLocatorPlugin
         channel?.setMethodCallHandler(plugin)
     }
 
-    override fun onNewIntent(intent: Intent): Boolean {
+    override fun onNewIntent(intent: Intent?): Boolean {
         if (intent.action != Keys.NOTIFICATION_ACTION) {
             // this is not our notification
             return false
@@ -272,13 +273,10 @@ class BackgroundLocatorPlugin
         val notificationCallback = PreferencesManager.getCallbackHandle(activity!!, Keys.NOTIFICATION_CALLBACK_HANDLE_KEY)
         if (notificationCallback != null && IsolateHolderService.backgroundEngine != null) {
            IsolateHolderService.backgroundEngine?.dartExecutor?.binaryMessenger?.let { messenger ->
-                // This block will only run if messenger is NOT null
+                // Safely use 'messenger' here, it's non-null
                 val backgroundChannel = MethodChannel(messenger, Keys.BACKGROUND_CHANNEL_ID)
-                Handler(Looper.getMainLooper()).post {
-                    backgroundChannel.invokeMethod(Keys.BCM_NOTIFICATION_CLICK,
-                        hashMapOf(Keys.ARG_NOTIFICATION_CALLBACK to notificationCallback))
-                }
             }
+
             activity?.mainLooper?.let {
                 Handler(it)
                         .post {
