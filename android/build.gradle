@@ -25,6 +25,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
+    namespace 'rekab.app.background_locator'
     compileSdkVersion 30
 
     sourceSets {
