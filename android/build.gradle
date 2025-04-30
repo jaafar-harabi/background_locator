@@ -33,15 +33,15 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
         // This line ensures core library desugaring is turned on:
         coreLibraryDesugaringEnabled true
     }
 
     // Kotlin targeting
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = JavaVersion.VERSION_1_8
     }
 
     sourceSets {
