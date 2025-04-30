@@ -1,33 +1,40 @@
 plugins {
+    // Android library plugin
     id 'com.android.library'
+    // Kotlin Android support
     id 'org.jetbrains.kotlin.android'
-    id 'flutter.plugin'
+    // Flutter’s declarative plugin loader
+    id 'flutter.plugin.loader'
 }
 
 android {
     namespace 'rekab.app.background_locator'
-    compileSdkVersion 34
+    compileSdk 34
+
     defaultConfig {
-        minSdkVersion 24
-        targetSdkVersion 34
+        minSdk 24
+        targetSdk 34
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+
     kotlinOptions {
         jvmTarget = '17'
     }
+
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
-    lintOptions {
+    lint {
         disable 'InvalidPackage'
     }
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.8.20"
-    implementation "com.google.android.gms:play-services-location:18.0.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
     implementation 'com.google.code.gson:gson:2.8.6'
 }
