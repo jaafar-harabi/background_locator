@@ -67,7 +67,7 @@ class BackgroundLocatorPlugin
                 initPluggable.setCallback(context, initCallbackHandle)
 
                 // Set init data if available
-                (args[Keys.ARG_INIT_DATA_CALLBACK] as? Map<*, *>)?.let { initData ->
+                (args[Keys.ARG_INIT_DATA_CALLBACK] as? Map<Any, Any>)?.let { initData ->
                     initPluggable.setInitData(context, initData)
                 }
             }
@@ -78,7 +78,8 @@ class BackgroundLocatorPlugin
                 disposePluggable.setCallback(context, it)
             }
 
-            val settings = args[Keys.ARG_SETTINGS] as Map<*, *>
+            val settings = args[Keys.ARG_SETTINGS] as? Map<Any, Any> ?: emptyMap()
+
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                     context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -212,7 +213,8 @@ class BackgroundLocatorPlugin
     override fun onMethodCall(call: MethodCall, result: Result) {
         when (call.method) {
             Keys.METHOD_PLUGIN_INITIALIZE_SERVICE -> {
-                val args: Map<Any, Any>? = call.arguments()
+                val args = call.arguments<Map<Any, Any>>() ?: emptyMap()
+
 
                 // save callback dispatcher to use it when device reboots
                 PreferencesManager.saveCallbackDispatcher(context!!, args)
@@ -221,7 +223,8 @@ class BackgroundLocatorPlugin
                 result.success(true)
             }
             Keys.METHOD_PLUGIN_REGISTER_LOCATION_UPDATE -> {
-                val args: Map<Any, Any> = call.arguments()
+                val args = call.arguments<Map<Any, Any>>() ?: emptyMap()
+
 
                 // save setting to use it when device reboots
                 PreferencesManager.saveSettings(context!!, args)
@@ -240,7 +243,8 @@ class BackgroundLocatorPlugin
                     return
                 }
 
-                val args: Map<Any, Any> = call.arguments()
+                val args = call.arguments<Map<Any, Any>>() ?: emptyMap()
+
                 updateNotificationText(context!!, args)
                 result.success(true)
             }
