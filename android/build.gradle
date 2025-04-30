@@ -1,15 +1,12 @@
-group 'rekab.app.background_locator'
-version '1.0-SNAPSHOT'
-
 buildscript {
-    ext.kotlin_version = '1.4.21'
+    ext.kotlin_version = '1.8.20'
     repositories {
         google()
         jcenter()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.1'
+        classpath 'com.android.tools.build:gradle:8.2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
