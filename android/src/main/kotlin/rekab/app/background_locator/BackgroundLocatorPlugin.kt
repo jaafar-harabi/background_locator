@@ -263,25 +263,24 @@ class BackgroundLocatorPlugin
         channel?.setMethodCallHandler(plugin)
     }
 
-    @Override
-    fun onNewIntent(intent: Intent?): Boolean {
-        if (intent?.action != Keys.NOTIFICATION_ACTION) {
-            return false
-        }
+    override fun onNewIntent(intent: Intent?): Boolean {
+    if (intent?.action != Keys.NOTIFICATION_ACTION) {
+        return false
+    }
 
-        val notificationCallback = PreferencesManager.getCallbackHandle(activity!!, Keys.NOTIFICATION_CALLBACK_HANDLE_KEY)
-        if (notificationCallback != null && IsolateHolderService.backgroundEngine != null) {
-            val backgroundChannel = MethodChannel(IsolateHolderService.backgroundEngine?.dartExecutor?.binaryMessenger, Keys.BACKGROUND_CHANNEL_ID)
-            activity?.mainLooper?.let {
-                Handler(it).post {
-                    backgroundChannel.invokeMethod(Keys.BCM_NOTIFICATION_CLICK,
-                            hashMapOf(Keys.ARG_NOTIFICATION_CALLBACK to notificationCallback))
-                }
+    val notificationCallback = PreferencesManager.getCallbackHandle(activity!!, Keys.NOTIFICATION_CALLBACK_HANDLE_KEY)
+    if (notificationCallback != null && IsolateHolderService.backgroundEngine != null) {
+        val backgroundChannel = MethodChannel(IsolateHolderService.backgroundEngine?.dartExecutor?.binaryMessenger, Keys.BACKGROUND_CHANNEL_ID)
+        activity?.mainLooper?.let {
+            Handler(it).post {
+                backgroundChannel.invokeMethod(Keys.BCM_NOTIFICATION_CLICK,
+                        hashMapOf(Keys.ARG_NOTIFICATION_CALLBACK to notificationCallback))
             }
         }
-
-        return true
     }
+
+    return true
+}
 
 
     override fun onDetachedFromActivity() {
