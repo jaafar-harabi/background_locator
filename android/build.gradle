@@ -1,59 +1,33 @@
-buildscript {
-    ext.kotlin_version = '1.8.20'
-    repositories {
-        google()
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:8.2.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'flutter.plugin'
 }
-
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
-
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
 
 android {
     namespace 'rekab.app.background_locator'
     compileSdkVersion 34
-    ndkVersion flutter.ndkVersion
-
-
     defaultConfig {
         minSdkVersion 24
         targetSdkVersion 34
     }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
-       
     }
-
-    // Kotlin targeting
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = '17'
     }
-
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
-
     lintOptions {
         disable 'InvalidPackage'
     }
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.8.20"
     implementation "com.google.android.gms:play-services-location:18.0.0"
     implementation 'com.google.code.gson:gson:2.8.6'
 }
